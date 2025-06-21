@@ -24,7 +24,7 @@ void main() async{
       options: DefaultFirebaseOptions.android,
     );
   }
-    //await FirebaseAuth.instance.signOut();
+   // await FirebaseAuth.instance.signOut();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -32,7 +32,45 @@ void main() async{
     ),
   );
   runApp(const MyApp());
+  //   runApp(
+  //   MultiProvider(
+  //     providers: [
+  //       ChangeNotifierProvider(create: (_) => UserProvider()),
+  //     ],
+  //     child: const RootApp(),
+  //   ),
+  // );
+
 }
+
+// class RootApp extends StatelessWidget {
+//   const RootApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamBuilder<User?>(
+//       stream: FirebaseAuth.instance.authStateChanges(),
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const MaterialApp(
+//             home: Scaffold(
+//               body: Center(child: CircularProgressIndicator()),
+//             ),
+//           );
+//         }
+
+//         if (snapshot.hasData) {
+//           // 🔁 Refresh user when Firebase signs in
+//           Provider.of<UserProvider>(context, listen: false).refreshUser();
+//           return const MaterialApp(home: MainScreen());
+//         }
+
+//         return const MaterialApp(home: LoginScreen());
+//       },
+//     );
+//   }
+// }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -133,29 +171,63 @@ class MyApp extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      home: user!=null ?MainScreen():LoginScreen(),
+      //home: user!=null ?MainScreen():LoginScreen(),
       //home: LoginScreen(),
+      home:const AuthWrapper()
+
     )
   );
   }
 }
 
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(), // listens to auth state
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
+          // User is logged in
+          final userProvider = Provider.of<UserProvider>(context, listen: false);
+          userProvider.refreshUser();
+          return const MainScreen();
+        } else {
+          // User not logged in
+          return LoginScreen();
+        }
+      },
+    );
+  }
+}
+
+
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int initialIndex;
+  const MainScreen({super.key,this.initialIndex=0});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
   bool _isPlaying = true;
+
+   @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   final List<Widget> _screens = [
     HomeScreen(),
     const SearchScreen(),
     const LibraryScreen(),
-    const ProfileScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -212,3 +284,4 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
+

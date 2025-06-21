@@ -61,11 +61,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (res == "success") {
       // Get UserProvider
-      UserProvider userProvider =
-          Provider.of<UserProvider>(context, listen: false);
 
       // Refresh user data after successful login
-      await userProvider.refreshUser();
+      // await userProvider.refreshUser();
+      await Provider.of<UserProvider>(context, listen: false).refreshUser();
+      UserProvider userProvider =Provider.of<UserProvider>(context, listen: false);
 
       // Navigate to home screen
       if (!mounted) return;

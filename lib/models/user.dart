@@ -5,6 +5,8 @@ class User {
   //final String photoUrl;
   final String username;
   final String uid;
+  final String? rating;
+  final String? review;
 
 
   const User({
@@ -12,12 +14,16 @@ class User {
     required this.email,
     //required this.photoUrl,
     required this.uid,
+    this.rating,
+    this.review,
   });
 
   Map<String, dynamic> toJson() => {
         'username': username,
         'uid': uid,
         'email': email,
+        'rating':rating,
+        'review':review
         //'photoUrl': photoUrl,
       };
 
@@ -29,6 +35,8 @@ class User {
       email: snapshot['email'],
       //photoUrl: snapshot['photoUrl'],
       uid: snapshot['uid'],
+      review: snapshot['review'],
+      rating: snapshot['rating'],
     );
   }
 
@@ -38,6 +46,8 @@ class User {
       email: email,
       //photoUrl: photoUrl,
       uid: uid,
+      rating:rating,
+      review:review,
     );
   }
 }

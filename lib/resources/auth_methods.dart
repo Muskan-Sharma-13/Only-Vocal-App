@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:only_vocal/models/user.dart' as model;
-import 'package:only_vocal/resources/storage_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

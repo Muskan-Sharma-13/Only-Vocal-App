@@ -52,4 +52,18 @@ class UserProvider with ChangeNotifier {
     _user = user;
     notifyListeners();
   }
+
+  void updateRatingAndReview({String? rating, String? review}) {
+  if (_user != null) {
+    _user = User(
+      username: _user!.username,
+      email: _user!.email,
+      uid: _user!.uid,
+      rating: rating ?? _user!.rating,
+      review: review ?? _user!.review,
+    );
+    notifyListeners();
+  }
+}
+
 }

@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:only_vocal/resources/user_provider.dart';
+import 'package:provider/provider.dart';
 import '../data/mock_data.dart';
 import '../models/genre.dart';
 import '../models/song.dart';
@@ -30,6 +32,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).getUser;
+    
+  if (user == null) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -60,7 +70,7 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  '${_getGreeting()}, User',
+                  '${_getGreeting()}, ${user.username}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
