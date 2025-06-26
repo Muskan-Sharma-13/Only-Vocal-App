@@ -1,30 +1,42 @@
+
 import 'package:only_vocal/firebase_options.dart';
+import 'package:only_vocal/models/song.dart';
 import 'package:only_vocal/resources/user_provider.dart';
+import 'package:only_vocal/resources/auth_methods.dart';
 import 'package:only_vocal/screens/auth_screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:only_vocal/screens/rating_screen.dart';
 import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/library_screen.dart';
 import 'screens/profile_screen.dart';
-import 'widgets/mini_player.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-
-  
-  if (Firebase.apps.isEmpty) {
+   try {
     await Firebase.initializeApp(
-      name:"only-vocal-app",
-      options: DefaultFirebaseOptions.android,
+      options: DefaultFirebaseOptions.currentPlatform,
     );
+    print("Firebase initialized");
+  } on FirebaseException catch (e) {
+    if (e.code == 'duplicate-app') {
+      print("Firebase already initialized.");
+    } else {
+      rethrow;
+    }
   }
-   // await FirebaseAuth.instance.signOut();
+  print("Firebase initialized");
+  //await FirebaseAuth.instance.signOut();
+
+
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -32,45 +44,7 @@ void main() async{
     ),
   );
   runApp(const MyApp());
-  //   runApp(
-  //   MultiProvider(
-  //     providers: [
-  //       ChangeNotifierProvider(create: (_) => UserProvider()),
-  //     ],
-  //     child: const RootApp(),
-  //   ),
-  // );
-
 }
-
-// class RootApp extends StatelessWidget {
-//   const RootApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamBuilder<User?>(
-//       stream: FirebaseAuth.instance.authStateChanges(),
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return const MaterialApp(
-//             home: Scaffold(
-//               body: Center(child: CircularProgressIndicator()),
-//             ),
-//           );
-//         }
-
-//         if (snapshot.hasData) {
-//           // 🔁 Refresh user when Firebase signs in
-//           Provider.of<UserProvider>(context, listen: false).refreshUser();
-//           return const MaterialApp(home: MainScreen());
-//         }
-
-//         return const MaterialApp(home: LoginScreen());
-//       },
-//     );
-//   }
-// }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -78,6 +52,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+    print(user);
+    
+  //   if (user != null) {
+  //   print("🔐 Logged in user:");
+  //   print("UID: ${user.uid}");
+  //   print("Email: ${user.email}");
+  //   print("Display Name: ${user.username}");
+  //   print("Phone Number: ${user.phoneNumber}");
+  // } else {
+  //   print("⚠️ No user is currently logged in.");
+  // }
     return MultiProvider(providers: 
     [
       ChangeNotifierProvider(
@@ -85,7 +70,6 @@ class MyApp extends StatelessWidget {
       ),
     ],
     child: MaterialApp(
-    // return MaterialApp(
       title: 'OnlyVocals4U',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -171,84 +155,57 @@ class MyApp extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      //home: user!=null ?MainScreen():LoginScreen(),
-      //home: LoginScreen(),
-      home:const AuthWrapper()
-
+      home: user != null
+    ? MainScreen()
+    : const LoginScreen(),
+      // home: LoginScreen(),
     )
-  );
+   );
   }
+
 }
-
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(), // listens to auth state
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
-          // User is logged in
-          final userProvider = Provider.of<UserProvider>(context, listen: false);
-          userProvider.refreshUser();
-          return const MainScreen();
-        } else {
-          // User not logged in
-          return LoginScreen();
-        }
-      },
-    );
-  }
-}
-
 
 class MainScreen extends StatefulWidget {
-  final int initialIndex;
-  const MainScreen({super.key,this.initialIndex=0});
+  // final void Function(Song? song, {bool stop}) onSongSelected;
+
+  const MainScreen({super.key});
+  // const MainScreen({super.key, required this.onSongSelected});
+
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late int _selectedIndex;
-  bool _isPlaying = true;
-
-   @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.initialIndex;
-  }
+  int _selectedIndex = 0;
 
   final List<Widget> _screens = [
     HomeScreen(),
     const SearchScreen(),
     const LibraryScreen(),
     ProfileScreen(),
+    RatingScreen()
   ];
+
+    @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.refreshUserFromAuth(); // 👈 this loads Firestore user
+  });
+
+    // final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // userProvider.getUserDetails();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
+
           _screens[_selectedIndex],
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 5, // Height of bottom navigation bar
-            child: MiniPlayer(
-              isPlaying: _isPlaying,
-              onPlayPause: () {
-                setState(() {
-                  _isPlaying = !_isPlaying;
-                });
-              },
-            ),
-          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -279,9 +236,12 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.rate_review_outlined),
+            label: 'Rate Us',
+          ),
         ],
       ),
     );
   }
 }
-

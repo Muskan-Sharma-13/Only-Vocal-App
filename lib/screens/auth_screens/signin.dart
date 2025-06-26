@@ -4,13 +4,12 @@ import 'package:only_vocal/components/colors.dart';
 import 'package:only_vocal/components/text_field_input.dart';
 import 'package:only_vocal/components/utils.dart';
 import 'package:only_vocal/main.dart';
+import 'package:only_vocal/models/song.dart';
 import 'package:only_vocal/resources/auth_methods.dart';
-import 'package:only_vocal/resources/user_provider.dart';
 import 'package:only_vocal/screens/home_screen.dart';
 import 'package:only_vocal/screens/auth_screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -23,7 +22,15 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
-
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
+  TimeOfDay _wakeUpTime = TimeOfDay(hour: 6, minute: 0);
+  TimeOfDay _bedTime = TimeOfDay(hour: 22, minute: 0);
+  TimeOfDay _workStartTime = TimeOfDay(hour: 9, minute: 0);
+  TimeOfDay _workEndTime = TimeOfDay(hour: 17, minute: 0);
   Uint8List? _image;
   bool _isLoading = false;
 
@@ -32,58 +39,63 @@ class _SignInScreenState extends State<SignInScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _userNameController.dispose();
+    _fullNameController.dispose();
+    _phoneNumberController.dispose();
+    _ageController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
     super.dispose();
   }
 
-  // Future<void> _selectTime(BuildContext context, String timeType) async {
-  //   TimeOfDay initialTime;
-  //   switch (timeType) {
-  //     case 'wakeup':
-  //       initialTime = _wakeUpTime;
-  //       break;
-  //     case 'bed':
-  //       initialTime = _bedTime;
-  //       break;
-  //     case 'workstart':
-  //       initialTime = _workStartTime;
-  //       break;
-  //     case 'workend':
-  //       initialTime = _workEndTime;
-  //       break;
-  //     default:
-  //       initialTime = TimeOfDay.now();
-  //   }
+  Future<void> _selectTime(BuildContext context, String timeType) async {
+    TimeOfDay initialTime;
+    switch (timeType) {
+      case 'wakeup':
+        initialTime = _wakeUpTime;
+        break;
+      case 'bed':
+        initialTime = _bedTime;
+        break;
+      case 'workstart':
+        initialTime = _workStartTime;
+        break;
+      case 'workend':
+        initialTime = _workEndTime;
+        break;
+      default:
+        initialTime = TimeOfDay.now();
+    }
 
-  //   final TimeOfDay? picked = await showTimePicker(
-  //     context: context,
-  //     initialTime: initialTime,
-  //   );
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+    );
 
-  //   if (picked != null) {
-  //     setState(() {
-  //       switch (timeType) {
-  //         case 'wakeup':
-  //           _wakeUpTime = picked;
-  //           break;
-  //         case 'bed':
-  //           _bedTime = picked;
-  //           break;
-  //         case 'workstart':
-  //           _workStartTime = picked;
-  //           break;
-  //         case 'workend':
-  //           _workEndTime = picked;
-  //           break;
-  //       }
-  //     });
-  //   }
-  // }
+    if (picked != null) {
+      setState(() {
+        switch (timeType) {
+          case 'wakeup':
+            _wakeUpTime = picked;
+            break;
+          case 'bed':
+            _bedTime = picked;
+            break;
+          case 'workstart':
+            _workStartTime = picked;
+            break;
+          case 'workend':
+            _workEndTime = picked;
+            break;
+        }
+      });
+    }
+  }
 
-  // String _formatTimeOfDay(TimeOfDay timeOfDay) {
-  //   final hour = timeOfDay.hour.toString().padLeft(2, '0');
-  //   final minute = timeOfDay.minute.toString().padLeft(2, '0');
-  //   return '$hour:$minute';
-  // }
+  String _formatTimeOfDay(TimeOfDay timeOfDay) {
+    final hour = timeOfDay.hour.toString().padLeft(2, '0');
+    final minute = timeOfDay.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
 
   void signUpUser() async {
     setState(() {
@@ -98,45 +110,16 @@ class _SignInScreenState extends State<SignInScreen> {
       // file: _image!,
     );
 
-    if (res == "success") {
-      // Get UserProvider
-      await Provider.of<UserProvider>(context, listen: false).refreshUser();
-
-      UserProvider userProvider =
-          Provider.of<UserProvider>(context, listen: false);
-
-      // Refresh user data after successful login
-      // await userProvider.refreshUser();
-
-      // Navigate to home screen
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => MainScreen(),
-        ),
-      );
-    } else {
-      // Show error message
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(res),
-        ),
-      );
-    }
-
     setState(() {
       _isLoading = false;
     });
-    // if (res != 'success') {
-    //   showSnackBar(res, context);
-    // } else {
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(builder: (context) => MainScreen()),
-    //   );
-    // }
-
-
+    if (res != 'success') {
+      showSnackBar(res, context);
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => MainScreen()),
+      );
+    }
   }
 
   void selectImage() async {
@@ -166,7 +149,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(height: 50),
                 Text(
                   'Sign Up',
-                  style: TextStyle(color: const Color.fromARGB(255, 249, 247, 247), fontSize: 35),
+                  style: TextStyle(color: const Color.fromARGB(255, 232, 223, 223), fontSize: 35),
                 ),
                 const SizedBox(height: 20),
 
@@ -180,8 +163,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           )
                         : CircleAvatar(
                             radius: 64,
-                            backgroundImage: AssetImage(
-                                'assets/carousel/red.png'),
+                            backgroundImage: NetworkImage(
+                                'https://i.pinimg.com/originals/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg'),
                           ),
                     Positioned(
                       bottom: -10,
@@ -277,7 +260,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: const Text(
                         'Already have an account?',
-                        style: TextStyle(color: Color.fromARGB(255, 250, 247, 247)),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     GestureDetector(

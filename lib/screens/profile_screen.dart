@@ -1,39 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:only_vocal/main.dart';
 import 'package:only_vocal/resources/user_provider.dart';
 import 'package:only_vocal/screens/auth_screens/login.dart';
-import 'package:only_vocal/screens/library_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../models/user.dart' as ModelUser;
 import 'settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  ProfileScreen({super.key});
-
-  late String rating;
-  late String review;
-
-  final _reviewController=TextEditingController();
-  final _ratingController=TextEditingController();
-
-  @override
-  void dispose(){
-    _reviewController.dispose();
-    _ratingController.dispose();
-
-    //super.dispose();
-  }
-
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).getUser;
-      if (user == null) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
-  }
-
+    final ModelUser.User? customUser = Provider.of<UserProvider>(context).getUser;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -51,10 +30,7 @@ class ProfileScreen extends StatelessWidget {
                       CircleAvatar(
                         radius: 60,
                         backgroundColor: const Color(0xFF1A1E3F),
-                        // backgroundImage: NetworkImage(
-                        //   'https://via.placeholder.com/300/1A1E3F/FFFFFF?text=User',
-                        // ),
-                        backgroundImage: AssetImage('assets/carousel/red.png')
+                        backgroundImage: AssetImage('assets/carousel/red.png'),
                       ),
                       Positioned(
                         bottom: 0,
@@ -85,12 +61,13 @@ class ProfileScreen extends StatelessWidget {
                 
                 // Username
                 Text(
-                  '${user.username}',
+                  // 'Username',
+                  customUser != null ? '${customUser.username}' : 'User',
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
                 
                 Text(
-                  '${user.email}',
+                  customUser != null ? '${customUser.email}' : 'user@example.com',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Colors.white.withOpacity(0.7),
                       ),
@@ -167,24 +144,21 @@ class ProfileScreen extends StatelessWidget {
                         },
                       ),
                       const SizedBox(height: 12),
-                      //  _buildRateArea(context, 'Rate Us',Icons.rate_review),
-                      // const SizedBox(height: 12),
                       _buildActionButton(
                         context,
                         'Logout',
                         Icons.logout,
-                        () async{
+                        () async {
                           // Logout functionality
-                          await FirebaseAuth.instance.signOut(); // Sign out the user
-                          //Provider.of<UserProvider>(context, listen: false).refreshUser(null);
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => LoginScreen()),
-                              (route) => false, // Remove all previous routes
-                            );
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
                         },
                       ),
-                      
                     ],
                   ),
                 ),
@@ -258,96 +232,4 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildRateArea(
-  BuildContext context,
-  String label,
-  IconData icon,
-  ) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final user = userProvider.getUser;
-
-    // Return nothing if user data is not yet loaded
-    if (user == null) {
-      return const SizedBox.shrink();
-    }
-
-    // Show nothing if both rating and review are already filled
-    final hasRating = user.rating != null && user.rating!.isNotEmpty;
-    final hasReview = user.review != null && user.review!.isNotEmpty;
-    if (hasRating && hasReview) {
-      return const SizedBox.shrink();
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.only(top: 16),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Rate Us',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 12),
-
-          // Show rating input if not already present
-          if (!hasRating)
-            TextFormField(
-              controller: _ratingController,
-              decoration: const InputDecoration(
-                labelText: 'Rating (e.g., 4.5)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            ),
-
-          // Show review input if review is missing
-          if (hasRating && !hasReview) ...[
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _reviewController,
-              decoration: const InputDecoration(
-                labelText: 'Review',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ],
-
-          const SizedBox(height: 12),
-          ElevatedButton.icon(
-            onPressed: () {
-              final newRating = _ratingController.text.trim();
-              final newReview = _reviewController.text.trim();
-
-              // Don't update if both fields are empty
-              if (newRating.isEmpty && newReview.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please enter something to submit.')),
-                );
-                return;
-              }
-
-              userProvider.updateRatingAndReview(
-                rating: newRating.isNotEmpty ? newRating : user.rating,
-                review: newReview.isNotEmpty ? newReview : user.review,
-              );
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Thanks for your feedback!')),
-              );
-            },
-            icon: const Icon(Icons.send),
-            label: const Text('Submit'),
-          ),
-        ],
-      ),
-    );
-  }
-
-
 }

@@ -136,10 +136,9 @@ class _LibraryScreenState extends State<LibraryScreen> with SingleTickerProvider
         return ListTile(
           leading: CircleAvatar(
             radius: 28,
-            // backgroundImage: NetworkImage(
-            //   'https://via.placeholder.com/300/1A1E3F/FFFFFF?text=${artistName.split(' ')[0]}',
-            // ),
-            backgroundImage:AssetImage('assets/carousel/red.png'),
+            backgroundImage: NetworkImage(
+              'https://via.placeholder.com/300/1A1E3F/FFFFFF?text=${artistName.split(' ')[0]}',
+            ),
           ),
           title: Text(
             artistName,

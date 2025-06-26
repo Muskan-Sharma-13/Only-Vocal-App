@@ -149,7 +149,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => FullPlayerScreen(song: result),
+                        builder: (context) => MusicAppScreen(song: result),
                       ),
                     );
                   },
@@ -169,7 +169,7 @@ class _SearchScreenState extends State<SearchScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FullPlayerScreen(song: result),
+                  builder: (context) => MusicAppScreen(song: result),
                 ),
               );
             },

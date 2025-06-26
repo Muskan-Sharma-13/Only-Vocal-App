@@ -1,6 +1,7 @@
 import 'package:only_vocal/components/colors.dart';
 import 'package:only_vocal/components/text_field_input.dart';
 import 'package:only_vocal/main.dart';
+import 'package:only_vocal/models/song.dart';
 import 'package:only_vocal/resources/auth_methods.dart';
 import 'package:only_vocal/resources/user_provider.dart';
 import 'package:only_vocal/screens/home_screen.dart';
@@ -61,11 +62,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (res == "success") {
       // Get UserProvider
+      UserProvider userProvider =
+          Provider.of<UserProvider>(context, listen: false);
 
       // Refresh user data after successful login
-      // await userProvider.refreshUser();
-      await Provider.of<UserProvider>(context, listen: false).refreshUser();
-      UserProvider userProvider =Provider.of<UserProvider>(context, listen: false);
+      //await userProvider.refreshUser();
 
       // Navigate to home screen
       if (!mounted) return;
@@ -112,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Text(
                 'Log In',
-                style: TextStyle(color: const Color.fromARGB(255, 241, 240, 240), fontSize: 35),
+                style: TextStyle(color: const Color.fromARGB(255, 238, 231, 231), fontSize: 35),
               ),
               SizedBox(
                 height: 60,
@@ -143,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 24,
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
                       //password input
                       const Text(
@@ -182,7 +183,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ? const CircularProgressIndicator(
                                     color: Colors.black,
                                   )
-                                : const Text('Log In')),
+                                : const Text('Log In',style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                                  )),
                       ),
                       const SizedBox(
                         height: 24,
@@ -209,25 +214,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 10,
               ),
 
-              // Obx(
-              //   () => isLoading.value
-              //       ? CircularProgressIndicator()
-              //       : PrimaryButtonWithIcon(
-              //           buttonText: "Sign in with Google",
-              //           onTap: () {
-              //             isLoading.value = true;
-              //             authController.login();
-              //           },
-              //           //iconPath: IconsPath.google,
-              //         ),
-              // ),
-              //signup page link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Text("Don't have an account?"),
+                    child: Text("Don't have an account?  "),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -236,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Text(
-                        "  Sign Up",
+                        "Sign Up",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),

@@ -1,9 +1,11 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:only_vocal/resources/user_provider.dart';
 import 'package:provider/provider.dart';
 import '../data/mock_data.dart';
 import '../models/genre.dart';
+import '../models/user.dart' as ModelUser;
 import '../models/song.dart';
 import 'genre_detail_screen.dart';
 import 'full_player_screen.dart';
@@ -11,34 +13,28 @@ import 'full_player_screen.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  String _getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) {
-      return 'Good morning';
-    } else if (hour < 17) {
-      return 'Good afternoon';
-    } else {
-      return 'Good evening';
-    }
-  }
-
   final carouselImages=[
-    'assets/carousel/red.png',
-    'assets/carousel/red.png',
-    'assets/carousel/red.png',
-    'assets/carousel/red.png',
-    'assets/carousel/red.png'
+    'assets/carousel/one.png',
+    'assets/carousel/two.png',
+    'assets/carousel/three.png',
   ];
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).getUser;
-    
-  if (user == null) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
-  }
+    final user = FirebaseAuth.instance.currentUser;
+    print('User:');
+    print(user);
+    final ModelUser.User? customUser = Provider.of<UserProvider>(context).getUser;
+
+print('Heloooo');
+if (customUser != null) {
+  print("✅ Username: ${customUser.username}");
+  print("✅ Email: ${customUser.email}");
+} else {
+  print("❌ Custom user is null");
+}
+
+print('Doneeee');
 
     return Scaffold(
       body: SafeArea(
@@ -58,10 +54,10 @@ class HomeScreen extends StatelessWidget {
                             color: const Color.fromARGB(255, 156, 98, 167),
                           ),
                     ),
-                    const Icon(
-                      Icons.notifications,
-                      color: Colors.white,
-                    ),
+                    // const Icon(
+                    //   Icons.notifications,
+                    //   color: Colors.white,
+                    // ),
                   ],
                 ),
               ),
@@ -70,7 +66,8 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  '${_getGreeting()}, ${user.username}',
+                  // 'Hey, user',
+                  customUser != null ? 'Hey, ${customUser.username}' : 'Hey there!',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
@@ -106,10 +103,11 @@ class HomeScreen extends StatelessWidget {
               Center(
                 child: CarouselSlider.builder(
                   options: CarouselOptions(
-                    height:200,
+                    height:180,
                     autoPlay: true,
                     //reverse: true,
-                    autoPlayInterval: Duration(seconds:4)
+                    autoPlayInterval: Duration(seconds:4),
+                    viewportFraction: 0.9
                   ),
                   itemCount:carouselImages.length,
                   itemBuilder: (context,index,realIndex){
@@ -121,7 +119,6 @@ class HomeScreen extends StatelessWidget {
               ),
 
               SizedBox(height:20),
-
               // Recently Played Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -202,23 +199,21 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget buildImage(String carouselImage,int index)=>Container(
-    margin:EdgeInsets.symmetric(horizontal:12),
+    margin:EdgeInsets.symmetric(horizontal:8),
     color:Colors.grey,
     child:Image.asset(
       carouselImage,
       fit:BoxFit.cover,
     )
   );
-
   Widget _buildRecentlyPlayedItem(BuildContext context, Song song) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FullPlayerScreen(song: song),
+            builder: (context) => MusicAppScreen(song: song),
           ),
         );
       },
@@ -334,7 +329,7 @@ class HomeScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FullPlayerScreen(song: song),
+            builder: (context) => MusicAppScreen(song: song),
           ),
         );
       },

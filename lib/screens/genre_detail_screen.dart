@@ -191,7 +191,7 @@ class GenreDetailScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => FullPlayerScreen(song: song),
+                        builder: (context) => MusicAppScreen(song: song),
                       ),
                     );
                   },

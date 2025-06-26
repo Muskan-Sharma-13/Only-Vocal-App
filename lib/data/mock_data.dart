@@ -5,7 +5,7 @@ import '../models/genre.dart';
 class MockData {
   static List<Song> recentlyPlayed = [
   Song(
-    id: '1',
+    id: 0,
     title: 'Levitating',
     artist: 'Dua Lipa',
     album: 'Future Nostalgia',
@@ -14,7 +14,7 @@ class MockData {
     isLiked: true,
   ),
   Song(
-    id: '2',
+    id: 1,
     title: 'As It Was',
     artist: 'Harry Styles',
     album: 'Harry’s House',
@@ -22,7 +22,7 @@ class MockData {
     audioURL: 'audio/as_it_was.mp3',
   ),
   Song(
-    id: '3',
+    id: 2,
     title: 'Shake It Off',
     artist: 'Taylor Swift',
     album: '1989',
@@ -30,7 +30,7 @@ class MockData {
     audioURL: 'audio/levitating.mp3',
   ),
   Song(
-    id: '4',
+    id: 3,
     title: 'SICKO MODE',
     artist: 'Travis Scott',
     album: 'ASTROWORLD',
@@ -39,7 +39,7 @@ class MockData {
     isLiked: true,
   ),
   Song(
-    id: '5',
+    id: 4,
     title: 'Lose Yourself',
     artist: 'Eminem',
     album: '8 Mile',
@@ -48,7 +48,7 @@ class MockData {
     isLiked: true,
   ),
   Song(
-    id: '6',
+    id: 5,
     title: 'HUMBLE.',
     artist: 'Kendrick Lamar',
     album: 'DAMN.',
@@ -56,7 +56,7 @@ class MockData {
     audioURL: 'audio/levitating.mp3',
   ),
   Song(
-    id: '7',
+    id: 6,
     title: 'Summertime',
     artist: 'Ella Fitzgerald & Louis Armstrong',
     album: 'Porgy and Bess',
@@ -65,7 +65,7 @@ class MockData {
     isLiked: true,
   ),
   Song(
-    id: '8',
+    id: 7,
     title: 'My Favourite Things',
     artist: 'John Coltrane',
     album: 'My Favorite Things',
@@ -74,7 +74,7 @@ class MockData {
 
   ),
   Song(
-    id: '9',
+    id: 8,
     title: 'So What',
     artist: 'Miles Davis',
     album: 'Kind of Blue',
@@ -83,7 +83,7 @@ class MockData {
 
   ),
   Song(
-    id: '10',
+    id: 9,
     title: 'Bohemian Rhapsody',
     artist: 'Queen',
     album: 'A Night at the Opera',
@@ -92,7 +92,7 @@ class MockData {
     isLiked: true,
   ),
   Song(
-    id: '11',
+    id: 10,
     title: 'In The End',
     artist: 'Linkin Park',
     album: 'Hybrid Theory',
@@ -100,7 +100,7 @@ class MockData {
     audioURL: 'audio/levitating.mp3',
   ),
   Song(
-    id: '12',
+    id: 11,
     title: 'Back In Black',
     artist: 'AC/DC',
     album: 'Back In Black',
@@ -196,7 +196,7 @@ static List<Song> likedSongs = [
     return List.generate(
       20,
       (index) => Song(
-        id: '$genreId-$index',
+        id: index,
         title: 'Song ${index + 1}',
         artist: 'Artist ${index % 5 + 1}',
         album: 'Album ${index % 3 + 1}',
@@ -209,7 +209,7 @@ static List<Song> likedSongs = [
   }
 
   static Song currentlyPlaying = Song(
-    id: '9',
+    id: 8,
     title: 'So What',
     artist: 'Miles Davis',
     album: 'Kind of Blue',
