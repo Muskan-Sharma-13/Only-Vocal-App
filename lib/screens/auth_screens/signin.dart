@@ -22,16 +22,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
-  final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController();
-  final TextEditingController _heightController = TextEditingController();
-  TimeOfDay _wakeUpTime = TimeOfDay(hour: 6, minute: 0);
-  TimeOfDay _bedTime = TimeOfDay(hour: 22, minute: 0);
-  TimeOfDay _workStartTime = TimeOfDay(hour: 9, minute: 0);
-  TimeOfDay _workEndTime = TimeOfDay(hour: 17, minute: 0);
-  Uint8List? _image;
+  // Uint8List? _image;
   bool _isLoading = false;
 
   @override
@@ -39,63 +30,9 @@ class _SignInScreenState extends State<SignInScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _userNameController.dispose();
-    _fullNameController.dispose();
-    _phoneNumberController.dispose();
-    _ageController.dispose();
-    _weightController.dispose();
-    _heightController.dispose();
     super.dispose();
   }
 
-  Future<void> _selectTime(BuildContext context, String timeType) async {
-    TimeOfDay initialTime;
-    switch (timeType) {
-      case 'wakeup':
-        initialTime = _wakeUpTime;
-        break;
-      case 'bed':
-        initialTime = _bedTime;
-        break;
-      case 'workstart':
-        initialTime = _workStartTime;
-        break;
-      case 'workend':
-        initialTime = _workEndTime;
-        break;
-      default:
-        initialTime = TimeOfDay.now();
-    }
-
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: initialTime,
-    );
-
-    if (picked != null) {
-      setState(() {
-        switch (timeType) {
-          case 'wakeup':
-            _wakeUpTime = picked;
-            break;
-          case 'bed':
-            _bedTime = picked;
-            break;
-          case 'workstart':
-            _workStartTime = picked;
-            break;
-          case 'workend':
-            _workEndTime = picked;
-            break;
-        }
-      });
-    }
-  }
-
-  String _formatTimeOfDay(TimeOfDay timeOfDay) {
-    final hour = timeOfDay.hour.toString().padLeft(2, '0');
-    final minute = timeOfDay.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
 
   void signUpUser() async {
     setState(() {
@@ -122,13 +59,13 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  void selectImage() async {
-    Uint8List im = await pickImage(ImageSource.gallery);
+  // void selectImage() async {
+  //   Uint8List im = await pickImage(ImageSource.gallery);
 
-    setState(() {
-      _image = im;
-    });
-  }
+  //   setState(() {
+  //     _image = im;
+  //   });
+  // }
 
   void navigateToLogin() {
     Navigator.of(context)
@@ -154,29 +91,29 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(height: 20),
 
                 // Circular avatar for profile image
-                Stack(
-                  children: [
-                    _image != null
-                        ? CircleAvatar(
-                            radius: 64,
-                            backgroundImage: MemoryImage(_image!),
-                          )
-                        : CircleAvatar(
-                            radius: 64,
-                            backgroundImage: NetworkImage(
-                                'https://i.pinimg.com/originals/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg'),
-                          ),
-                    Positioned(
-                      bottom: -10,
-                      left: 80,
-                      child: IconButton(
-                        onPressed: selectImage,
-                        icon: const Icon(Icons.add_a_photo),
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ],
-                ),
+                // Stack(
+                //   children: [
+                //     _image != null
+                //         ? CircleAvatar(
+                //             radius: 64,
+                //             backgroundImage: MemoryImage(_image!),
+                //           )
+                //         : CircleAvatar(
+                //             radius: 64,
+                //             backgroundImage: NetworkImage(
+                //                 'https://i.pinimg.com/originals/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg'),
+                //           ),
+                //     Positioned(
+                //       bottom: -10,
+                //       left: 80,
+                //       child: IconButton(
+                //         onPressed: selectImage,
+                //         icon: const Icon(Icons.add_a_photo),
+                //         color: Colors.blue,
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 const SizedBox(height: 30),
 
                 Container(
@@ -260,7 +197,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: const Text(
                         'Already have an account?',
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: Color.fromARGB(255, 244, 242, 242)),
                       ),
                     ),
                     GestureDetector(

@@ -19,7 +19,7 @@ class MockData {
     artist: 'Harry Styles',
     album: 'Harry’s House',
     albumArt: 'assets/thumbnails/as_it_was.jpeg',
-    audioURL: 'audio/as_it_was.mp3',
+    audioURL: 'audio/as-it-was.mp3',
   ),
   Song(
     id: 2,
@@ -35,7 +35,7 @@ class MockData {
     artist: 'Travis Scott',
     album: 'ASTROWORLD',
     albumArt: 'assets/thumbnails/sicko_mode.jpeg',
-    audioURL: 'audio/sicko.mp3',
+    audioURL: 'audio/sicko-mode.mp3',
     isLiked: true,
   ),
   Song(
@@ -44,7 +44,7 @@ class MockData {
     artist: 'Eminem',
     album: '8 Mile',
     albumArt: 'assets/thumbnails/lose_yourself.jpeg',
-    audioURL: 'audio/levitating.mp3',
+    audioURL: 'audio/lose-yourself.mp3',
     isLiked: true,
   ),
   Song(
@@ -53,7 +53,7 @@ class MockData {
     artist: 'Kendrick Lamar',
     album: 'DAMN.',
     albumArt: 'assets/thumbnails/humble.jpeg',
-    audioURL: 'audio/levitating.mp3',
+    audioURL: 'audio/humble.mp3',
   ),
   Song(
     id: 6,
@@ -97,7 +97,7 @@ class MockData {
     artist: 'Linkin Park',
     album: 'Hybrid Theory',
     albumArt: 'assets/thumbnails/in_the_end.jpeg',
-    audioURL: 'audio/levitating.mp3',
+    audioURL: 'audio/in-the-end.mp3',
   ),
   Song(
     id: 11,
@@ -112,7 +112,6 @@ class MockData {
 static List<Song> likedSongs = [
   recentlyPlayed[0],  // Levitating
   recentlyPlayed[3],  // SICKO MODE
-  recentlyPlayed[4],  // Lose Yourself
   recentlyPlayed[6],  // Summertime
   recentlyPlayed[9],  // Bohemian Rhapsody
 ];

@@ -30,29 +30,29 @@ class ProfileScreen extends StatelessWidget {
                       CircleAvatar(
                         radius: 60,
                         backgroundColor: const Color(0xFF1A1E3F),
-                        backgroundImage: AssetImage('assets/carousel/red.png'),
+                        backgroundImage: AssetImage('assets/images/person.png'),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 36,
-                          width: 36,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFD700),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              width: 2,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.edit,
-                            color: Colors.black,
-                            size: 20,
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   bottom: 0,
+                      //   right: 0,
+                      //   child: Container(
+                      //     height: 36,
+                      //     width: 36,
+                      //     decoration: BoxDecoration(
+                      //       color: const Color(0xFFFFD700),
+                      //       shape: BoxShape.circle,
+                      //       border: Border.all(
+                      //         color: Theme.of(context).scaffoldBackgroundColor,
+                      //         width: 2,
+                      //       ),
+                      //     ),
+                      //     child: const Icon(
+                      //       Icons.edit,
+                      //       color: Colors.black,
+                      //       size: 20,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
